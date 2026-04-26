@@ -24,15 +24,14 @@ export const router = createBrowserRouter([
     path: "/citizen",
     Component: Layout,
     children: [
-      { path: "onboarding", Component: CitizenOnboarding },
       { path: "dashboard", Component: CitizenDashboard },
+      { path: "onboarding", Component: CitizenOnboarding },
     ],
   },
   {
     path: "/operator",
     Component: Layout,
     children: [
-      { path: "onboarding", Component: OperatorOnboarding },
       { path: "dashboard", Component: OperatorDashboard },
     ],
   },
@@ -40,7 +39,6 @@ export const router = createBrowserRouter([
     path: "/supervisor",
     Component: Layout,
     children: [
-      { path: "onboarding", Component: SupervisorOnboarding },
       { path: "dashboard", Component: SupervisorDashboard },
     ],
   },
@@ -48,7 +46,6 @@ export const router = createBrowserRouter([
     path: "/dispatch",
     Component: Layout,
     children: [
-      { path: "onboarding", Component: DispatchOnboarding },
       { path: "dashboard", Component: DispatchDashboard },
     ],
   },
