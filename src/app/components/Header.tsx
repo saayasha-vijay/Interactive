@@ -79,9 +79,18 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
         )}
         <div className="flex items-center gap-2">
           {!showBack && (
-            <div className="h-8 w-8 bg-red-600 rounded-lg flex items-center justify-center">
-              <Shield className="h-5 w-5 text-white" />
-            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleLogout}
+              className="h-10 w-10 bg-red-600 hover:bg-red-700 rounded-xl flex items-center justify-center p-0 group relative transition-all active:scale-90"
+              title="Reset Demo"
+            >
+              <Shield className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[8px] font-black px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap uppercase tracking-widest">
+                Reset Demo
+              </span>
+            </Button>
           )}
           <div>
             <h1 className="text-sm font-black tracking-tight uppercase">{getDashboardTitle()}</h1>
@@ -134,7 +143,13 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
 }
 
 function SidebarTrigger() {
-  const { role, isGuest } = useAuth();
+  const { role, isGuest, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
 
   const menuItems: Record<string, { icon: any, label: string, active?: boolean }[]> = {
     citizen: [
@@ -181,9 +196,13 @@ function SidebarTrigger() {
       <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0 border-r border-border">
         <SheetHeader className="p-6 border-b border-border bg-muted/30">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-600/20">
-              <Shield className="h-7 w-7 text-white" />
-            </div>
+            <button 
+              onClick={handleLogout}
+              className="h-12 w-12 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-600/20 hover:bg-red-700 transition-all active:scale-90 group"
+              title="Reset Demo"
+            >
+              <Shield className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+            </button>
             <div className="text-left">
               <SheetTitle className="text-xl font-black tracking-tight">IND-EMERGENCY</SheetTitle>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Unified Response v4.0</p>
