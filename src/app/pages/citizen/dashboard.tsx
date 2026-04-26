@@ -1,20 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   ShieldAlert, 
-  MapPin, 
   PhoneCall, 
-  ChevronRight, 
   Heart, 
   Flame, 
   Wind, 
   Shield,
-  LifeBuoy,
-  Phone,
-  AlertTriangle,
-  ArrowLeft,
   Activity,
   Zap,
-  Info
+  Info,
+  Layers
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
@@ -62,6 +57,7 @@ export default function CitizenDashboard() {
         { id: 'p2', name: 'Assault / Violence', number: '100', description: 'Emergency police response' },
         { id: 'p3', name: 'Missing Person', number: '100', description: 'Report a missing individual' },
         { id: 'p4', name: 'Cybercrime', number: '1930', description: 'Cyber Cell assistance' },
+        { id: 'p-other', name: 'Other Emergency', number: '100', description: 'Connects you to the nearest police station based on your location.' },
       ]
     },
     {
@@ -74,6 +70,7 @@ export default function CitizenDashboard() {
         { id: 'm1', name: 'Heart Attack', number: '108', description: 'Critical life support' },
         { id: 'm2', name: 'Accident Injury', number: '102', description: 'Ambulance dispatch' },
         { id: 'm3', name: 'Unconscious Person', number: '108', description: 'Emergency medical aid' },
+        { id: 'm-other', name: 'Other Emergency', number: '102', description: 'Connects you to the nearest hospital or emergency medical service.' },
       ]
     },
     {
@@ -86,6 +83,7 @@ export default function CitizenDashboard() {
         { id: 'f1', name: 'Fire', number: '101', description: 'Fire brigade dispatch' },
         { id: 'f2', name: 'Gas Leak', number: '101', description: 'Hazardous leak response' },
         { id: 'f3', name: 'Explosion', number: '101', description: 'Critical incident response' },
+        { id: 'f-other', name: 'Other Emergency', number: '101', description: 'Connects you to the nearest fire and rescue unit.' },
       ]
     },
     {
@@ -97,6 +95,20 @@ export default function CitizenDashboard() {
       subServices: [
         { id: 'd1', name: 'Flood', number: '108', description: 'Disaster management' },
         { id: 'd2', name: 'Earthquake', number: '108', description: 'Response teams' },
+        { id: 'd-other', name: 'Other Emergency', number: '108', description: 'Connects you to the nearest disaster response team.' },
+      ]
+    },
+    {
+      id: 'others',
+      title: 'Others',
+      number: '112',
+      icon: Layers,
+      color: 'text-purple-500',
+      subServices: [
+        { id: 'o1', name: 'Utility Failure', number: '1912', description: 'Power/Water supply issues' },
+        { id: 'o2', name: 'Animal Rescue', number: '1962', description: 'Animal welfare/emergency' },
+        { id: 'o3', name: 'Social Support', number: '1091', description: 'Women/Child helpline' },
+        { id: 'o-other', name: 'Other Emergency', number: '112', description: 'Connects you to the nearest relevant support service.' },
       ]
     }
   ];
@@ -136,7 +148,7 @@ export default function CitizenDashboard() {
         onBack={() => setView('overview')}
       />
       
-      <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 animate-in fade-in duration-500">
+      <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 animate-in fade-in duration-500 overflow-x-hidden">
         {view === 'overview' ? (
           <div className="space-y-12">
             {/* SOS Section */}
@@ -158,7 +170,7 @@ export default function CitizenDashboard() {
             {/* Primary Numbers Grid */}
             <div className="space-y-4">
               <h2 className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-1">Direct Services</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
                 {categories.map((cat) => (
                   <Card 
                     key={cat.id} 
@@ -209,10 +221,10 @@ export default function CitizenDashboard() {
                   onClick={() => handleCallRequest(service)}
                 >
                   <CardContent className="p-5 flex items-center justify-between">
-                    <div className="space-y-1.5">
+                    <div className="space-y-1.5 flex-1">
                       <div className="flex items-center gap-2">
-                        <Activity className={`h-4 w-4 ${selectedCategory.color}`} />
-                        <p className="font-bold text-lg tracking-tight">{service.name}</p>
+                        <Activity className={`h-4 w-4 shrink-0 ${selectedCategory.color}`} />
+                        <p className="font-bold text-lg tracking-tight leading-tight">{service.name}</p>
                       </div>
                       <p className="text-xs text-muted-foreground font-medium pr-4 leading-relaxed">{service.description}</p>
                     </div>
@@ -231,7 +243,7 @@ export default function CitizenDashboard() {
               <div className="rounded-3xl bg-muted/30 p-6 flex items-start gap-4 border border-border">
                 <Info className="h-5 w-5 opacity-40 shrink-0 mt-0.5" />
                 <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                  Reporting via {selectedCategory?.title} dashboard automatically alerts the nearest {selectedCategory?.title.split(' ')[0]} stations and shares your real-time coordinates.
+                  Reporting via {selectedCategory?.title} dashboard automatically alerts the nearest units and shares your real-time coordinates.
                 </p>
               </div>
             </div>
@@ -241,15 +253,17 @@ export default function CitizenDashboard() {
 
       {/* Confirmation Modal */}
       <Dialog open={isCallModalOpen} onOpenChange={setIsCallModalOpen}>
-        <DialogContent className="max-w-[340px] rounded-[2.5rem] p-8 border-border shadow-2xl">
+        <DialogContent className="max-w-[90vw] sm:max-w-[340px] rounded-[2.5rem] p-8 border-border shadow-2xl">
           <DialogHeader className="space-y-6">
             <div className="mx-auto h-24 w-24 rounded-full bg-red-600/10 flex items-center justify-center ring-8 ring-red-600/5">
               <PhoneCall className="h-12 w-12 text-red-600 animate-bounce" />
             </div>
             <div className="text-center space-y-3">
-              <DialogTitle className="text-3xl font-black tracking-tighter uppercase">Confirm Call</DialogTitle>
+              <DialogTitle className="text-3xl font-black tracking-tighter uppercase leading-none">Confirm Call</DialogTitle>
               <DialogDescription className="text-sm font-medium leading-relaxed">
                 Emergency call to <span className="font-black text-foreground">"{selectedService?.name}"</span>. 
+                <br />
+                <span className="mt-2 block text-xs opacity-70 italic">{selectedService?.description}</span>
                 <br />
                 Line: <span className="font-black text-red-600 text-xl tracking-tighter">{selectedService?.number}</span>
               </DialogDescription>

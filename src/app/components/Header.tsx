@@ -92,18 +92,18 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
               </span>
             </Button>
           )}
-          <div>
-            <h1 className="text-sm font-black tracking-tight uppercase">{getDashboardTitle()}</h1>
+          <div className="min-w-0">
+            <h1 className="text-[11px] sm:text-sm font-black tracking-tight uppercase truncate">{getDashboardTitle()}</h1>
             <div className="flex items-center gap-1.5 opacity-60">
               <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">System Online</span>
+              <span className="text-[9px] font-bold uppercase tracking-widest truncate">System Online</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-xl border border-border mr-2">
+        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-xl border border-border mr-2">
           <MapPin className="h-3.5 w-3.5 text-red-500" />
           <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">Connaught Place, DL</span>
         </div>
