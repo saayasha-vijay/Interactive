@@ -58,7 +58,7 @@ const responseTimeData = [
 export default function SupervisorDashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title="Supervisor Analytics" />
+      <Header />
       
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8 space-y-8 animate-in fade-in duration-500">
         {/* Top Summary Stats */}

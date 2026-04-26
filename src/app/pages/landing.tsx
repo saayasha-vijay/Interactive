@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Shield, Phone, Mail, ArrowRight, AlertCircle, Info, Lock } from 'lucide-react';
+import { Shield, Phone, Mail, ArrowRight, Info, Lock } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -12,6 +12,7 @@ import {
   InputOTPSlot,
 } from "../components/ui/input-otp";
 import { toast } from "sonner";
+import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
   const [phone, setPhone] = useState('');
@@ -20,6 +21,7 @@ export default function LandingPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSendOTP = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +36,8 @@ export default function LandingPage() {
   const handleVerifyOTP = () => {
     if (otp === "123456") {
       toast.success("Login successful!");
-      navigate('/citizen/dashboard');
+      login('citizen');
+      navigate('/citizen/dashboard', { replace: true });
     } else {
       toast.error("Invalid OTP. Try 123456");
     }
@@ -46,15 +49,26 @@ export default function LandingPage() {
       toast.error("Please fill in all fields");
       return;
     }
-    // Simple mock routing
-    if (email.includes('op')) navigate('/operator/dashboard');
-    else if (email.includes('sup')) navigate('/supervisor/dashboard');
-    else if (email.includes('dis')) navigate('/dispatch/dashboard');
-    else navigate('/citizen/dashboard');
+
+    const lowEmail = email.toLowerCase();
+    
+    if (lowEmail.endsWith('@operator.com')) {
+      login('operator');
+      navigate('/operator/dashboard', { replace: true });
+    } else if (lowEmail.endsWith('@supervisor.com')) {
+      login('supervisor');
+      navigate('/supervisor/dashboard', { replace: true });
+    } else if (lowEmail.endsWith('@dispatch.com')) {
+      login('dispatch');
+      navigate('/dispatch/dashboard', { replace: true });
+    } else {
+      toast.error("Unauthorized email domain. Use @operator.com, @supervisor.com, or @dispatch.com");
+    }
   };
 
   const handleGuestAccess = () => {
-    navigate('/citizen/dashboard');
+    login('citizen', true);
+    navigate('/citizen/dashboard', { replace: true });
   };
 
   return (
@@ -79,17 +93,17 @@ export default function LandingPage() {
         <Tabs defaultValue="citizen" className="w-full">
           <TabsList className="grid w-full grid-cols-2 h-14 p-1 bg-muted/50 rounded-2xl mb-6">
             <TabsTrigger value="citizen" className="text-sm font-bold rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              Citizen Login
+              Login as Citizen (Phone)
             </TabsTrigger>
             <TabsTrigger value="personnel" className="text-sm font-bold rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              Personnel
+              Authorized Login (Email)
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="citizen" className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-400">
             <Card className="border-border bg-card/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden">
               <CardHeader className="space-y-1 pb-6">
-                <CardTitle className="text-2xl font-black tracking-tight">Login as Citizen</CardTitle>
+                <CardTitle className="text-2xl font-black tracking-tight">Citizen Login</CardTitle>
                 <CardDescription className="text-sm font-medium">Verify your phone for priority assistance</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -149,15 +163,15 @@ export default function LandingPage() {
               onClick={handleGuestAccess}
               className="w-full h-16 text-xl font-black border-2 border-red-600/30 text-red-500 hover:bg-red-600/5 hover:border-red-600 rounded-2xl active:scale-[0.98] transition-all shadow-sm"
             >
-              Continue as Guest
+              Continue as Guest (Emergency Use)
             </Button>
           </TabsContent>
 
           <TabsContent value="personnel" className="animate-in fade-in slide-in-from-bottom-2 duration-400">
             <Card className="border-border bg-card/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden">
               <CardHeader className="space-y-1 pb-6">
-                <CardTitle className="text-2xl font-black tracking-tight">Personnel Access</CardTitle>
-                <CardDescription className="text-sm font-medium">Internal portal for authorized units</CardDescription>
+                <CardTitle className="text-2xl font-black tracking-tight">Authorized Access</CardTitle>
+                <CardDescription className="text-sm font-medium">Internal portal for emergency units</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <form onSubmit={handlePersonnelLogin} className="space-y-4">
@@ -168,7 +182,7 @@ export default function LandingPage() {
                       <Input 
                         id="email" 
                         type="email"
-                        placeholder="operator@city.gov.in" 
+                        placeholder="officer@operator.com" 
                         className="h-14 pl-12 border-border bg-background/50 rounded-2xl"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}

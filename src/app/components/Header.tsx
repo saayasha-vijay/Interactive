@@ -13,7 +13,15 @@ import {
   HelpCircle,
   History,
   Navigation,
-  Lock
+  Lock,
+  LayoutDashboard,
+  FileText,
+  Activity,
+  Radio,
+  Map as MapIcon,
+  TrendingUp,
+  BarChart3,
+  ShieldAlert
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { 
@@ -25,17 +33,45 @@ import {
   DropdownMenuTrigger 
 } from './ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import { useAuth, UserRole } from '../context/AuthContext';
 
-export function Header({ title, showBack = false }: { title?: string, showBack?: boolean }) {
+interface HeaderProps {
+  title?: string;
+  showBack?: boolean;
+  onBack?: () => void;
+}
+
+export function Header({ title, showBack = false, onBack }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isCitizen = location.pathname.includes('citizen');
+  const { role, logout } = useAuth();
+
+  const getDashboardTitle = () => {
+    if (title) return title;
+    switch (role) {
+      case 'citizen': return "Citizen Dashboard";
+      case 'operator': return "Operator Dashboard";
+      case 'supervisor': return "Supervisor Dashboard";
+      case 'dispatch': return "Dispatch Dashboard";
+      default: return "Emergency Portal";
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md px-4 sm:px-6 h-16 flex items-center justify-between">
       <div className="flex items-center gap-4">
         {showBack ? (
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-xl">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onBack || (() => navigate(-1))} 
+            className="rounded-xl"
+          >
             <ChevronLeft className="h-5 w-5" />
           </Button>
         ) : (
@@ -48,7 +84,7 @@ export function Header({ title, showBack = false }: { title?: string, showBack?:
             </div>
           )}
           <div>
-            <h1 className="text-sm font-black tracking-tight uppercase">{title || (isCitizen ? "Citizen Portal" : "Control Room")}</h1>
+            <h1 className="text-sm font-black tracking-tight uppercase">{getDashboardTitle()}</h1>
             <div className="flex items-center gap-1.5 opacity-60">
               <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
               <span className="text-[10px] font-bold uppercase tracking-widest">System Online</span>
@@ -87,7 +123,7 @@ export function Header({ title, showBack = false }: { title?: string, showBack?:
               <HelpCircle className="mr-2 h-4 w-4" /> Support
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="rounded-xl text-red-500 focus:text-red-500 cursor-pointer" onClick={() => navigate('/')}>
+            <DropdownMenuItem className="rounded-xl text-red-500 focus:text-red-500 cursor-pointer" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" /> Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -98,8 +134,42 @@ export function Header({ title, showBack = false }: { title?: string, showBack?:
 }
 
 function SidebarTrigger() {
-  const location = useLocation();
-  const isCitizen = location.pathname.includes('citizen');
+  const { role, isGuest } = useAuth();
+
+  const menuItems: Record<string, { icon: any, label: string, active?: boolean }[]> = {
+    citizen: [
+      { icon: LayoutDashboard, label: "Dashboard", active: true },
+      { icon: History, label: "My Reports" },
+      { icon: Navigation, label: "Live Tracking" },
+      { icon: Lock, label: "Safety Settings" },
+      { icon: HelpCircle, label: "Emergency Contacts" },
+      { icon: Settings, label: "App Preferences" },
+    ],
+    operator: [
+      { icon: LayoutDashboard, label: "Dashboard", active: true },
+      { icon: Activity, label: "Live Incidents" },
+      { icon: Radio, label: "Unit Management" },
+      { icon: FileText, label: "Reports Queue" },
+      { icon: ShieldAlert, label: "System Status" },
+      { icon: User, label: "Profile" },
+    ],
+    dispatch: [
+      { icon: LayoutDashboard, label: "Dashboard", active: true },
+      { icon: FileText, label: "Assigned Tasks" },
+      { icon: MapIcon, label: "Navigation / Map" },
+      { icon: Activity, label: "Status Updates" },
+      { icon: User, label: "Profile" },
+    ],
+    supervisor: [
+      { icon: LayoutDashboard, label: "Dashboard", active: true },
+      { icon: BarChart3, label: "Analytics" },
+      { icon: FileText, label: "Reports Overview" },
+      { icon: TrendingUp, label: "System Performance" },
+      { icon: User, label: "Profile" },
+    ],
+  };
+
+  const currentMenu = menuItems[role || 'citizen'] || menuItems.citizen;
 
   return (
     <Sheet>
@@ -124,40 +194,22 @@ function SidebarTrigger() {
         <div className="p-4 space-y-6">
           <div className="space-y-1">
             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 ml-4 mb-2">Main Menu</h4>
-            <SidebarItem icon={Shield} label="Dashboard" active />
-            {isCitizen ? (
-              <>
-                <SidebarItem icon={History} label="My Reports" />
-                <SidebarItem icon={Navigation} label="Live Tracking" />
-                <SidebarItem icon={Bell} label="Alert Notifications" badge="2" />
-              </>
-            ) : (
-              <>
-                <SidebarItem icon={Search} label="Active Incidents" />
-                <SidebarItem icon={Users} label="Unit Coordination" />
-                <SidebarItem icon={History} label="System Logs" />
-              </>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 ml-4 mb-2">Security & Help</h4>
-            <SidebarItem icon={Lock} label="Safety Settings" />
-            <SidebarItem icon={HelpCircle} label="Emergency Contacts" />
-            <SidebarItem icon={Settings} label="App Preferences" />
+            {currentMenu.map((item, idx) => (
+              <SidebarItem key={idx} icon={item.icon} label={item.label} active={item.active} />
+            ))}
           </div>
         </div>
 
         <div className="absolute bottom-0 w-full p-6 border-t border-border bg-muted/10">
           <div className="flex items-center gap-3 p-3 rounded-2xl bg-card border border-border">
             <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-              RK
+              {role?.slice(0, 1).toUpperCase() || 'C'}
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold tracking-tight">Rajesh Kumar</p>
-              <p className="text-[10px] font-bold opacity-50 uppercase tracking-tighter">Verified Citizen</p>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-[10px] font-bold opacity-50 uppercase tracking-tighter truncate">
+                {isGuest ? 'Guest User' : `Verified ${role || 'Citizen'}`}
+              </p>
             </div>
-            <LogOut className="h-4 w-4 opacity-40" />
           </div>
         </div>
       </SheetContent>
@@ -179,27 +231,5 @@ function SidebarItem({ icon: Icon, label, active = false, badge }: { icon: any, 
         </span>
       )}
     </Button>
-  );
-}
-
-function Users({ className }: { className?: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
   );
 }

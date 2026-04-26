@@ -36,7 +36,7 @@ export default function DispatchDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col pb-24">
-      <Header title="Field Dispatch" />
+      <Header />
       
       <main className="flex-1 max-w-md mx-auto w-full px-6 py-8 space-y-8 animate-in fade-in duration-500">
         {/* Navigation/Map Placeholder */}

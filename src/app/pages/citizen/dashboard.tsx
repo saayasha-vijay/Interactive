@@ -130,7 +130,11 @@ export default function CitizenDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title={view === 'detail' ? selectedCategory?.title : "Citizen Dashboard"} showBack={view === 'detail'} />
+      <Header 
+        title={view === 'detail' ? `${selectedCategory?.title} Services` : "Citizen Dashboard"} 
+        showBack={view === 'detail'} 
+        onBack={() => setView('overview')}
+      />
       
       <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 animate-in fade-in duration-500">
         {view === 'overview' ? (
@@ -194,9 +198,6 @@ export default function CitizenDashboard() {
         ) : (
           <div className="space-y-6 animate-in slide-in-from-right-4 duration-400">
             <div className="flex items-center gap-4 mb-2">
-              <Button variant="ghost" size="icon" onClick={() => setView('overview')} className="rounded-xl">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
               <h2 className="text-2xl font-black tracking-tight uppercase">{selectedCategory?.title} Services</h2>
             </div>
 

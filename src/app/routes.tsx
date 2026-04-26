@@ -1,12 +1,8 @@
 import { createBrowserRouter, Outlet } from "react-router";
 import LandingPage from "./pages/landing";
-import CitizenOnboarding from "./pages/citizen/onboarding";
 import CitizenDashboard from "./pages/citizen/dashboard";
-import OperatorOnboarding from "./pages/operator/onboarding";
 import OperatorDashboard from "./pages/operator/dashboard";
-import SupervisorOnboarding from "./pages/supervisor/onboarding";
 import SupervisorDashboard from "./pages/supervisor/dashboard";
-import DispatchOnboarding from "./pages/dispatch/onboarding";
 import DispatchDashboard from "./pages/dispatch/dashboard";
 import NotFound from "./pages/not-found";
 
@@ -25,7 +21,6 @@ export const router = createBrowserRouter([
     Component: Layout,
     children: [
       { path: "dashboard", Component: CitizenDashboard },
-      { path: "onboarding", Component: CitizenOnboarding },
     ],
   },
   {

@@ -53,7 +53,7 @@ export default function OperatorDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col overflow-hidden h-screen">
-      <Header title="Central Control Room" />
+      <Header />
       
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar: Incidents */}
