@@ -63,7 +63,8 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md px-4 sm:px-6 h-16 flex items-center justify-between">
+    <>
+      <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md px-4 sm:px-6 h-16 flex items-center justify-between">
       <div className="flex items-center gap-4">
         {showBack ? (
           <Button 
@@ -139,16 +140,28 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
         </DropdownMenu>
       </div>
     </header>
+    <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white text-center py-1 text-[8px] font-black z-[9999] pointer-events-none">
+      ACTIVE HEADER COMPONENT - V2
+    </div>
+    </>
   );
 }
 
 function SidebarTrigger() {
   const { role, isGuest, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/', { replace: true });
+    setOpen(false);
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setOpen(false);
   };
 
   const menuItems: Record<string, { icon: any, label: string, active?: boolean, path?: string }[]> = {
@@ -187,7 +200,7 @@ function SidebarTrigger() {
   const currentMenu = menuItems[role || 'citizen'] || menuItems.citizen;
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-xl">
           <Menu className="h-5 w-5" />
@@ -206,6 +219,7 @@ function SidebarTrigger() {
             <div className="text-left">
               <SheetTitle className="text-xl font-black tracking-tight">IND-EMERGENCY</SheetTitle>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Unified Response v4.0</p>
+              <p className="text-[8px] text-yellow-500 font-black mt-1">DEBUG: ACTIVE HEADER</p>
             </div>
           </div>
         </SheetHeader>
@@ -214,14 +228,13 @@ function SidebarTrigger() {
           <div className="space-y-1">
             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 ml-4 mb-2">Main Menu</h4>
             {currentMenu.map((item, idx) => (
-              <SheetClose asChild key={idx}>
-                <SidebarItem 
-                  icon={item.icon} 
-                  label={item.label} 
-                  active={location.pathname === item.path}
-                  onClick={() => item.path && navigate(item.path)} 
-                />
-              </SheetClose>
+              <SidebarItem 
+                key={idx}
+                icon={item.icon} 
+                label={item.label} 
+                active={location.pathname === item.path}
+                onClick={() => item.path && handleNavigate(item.path)} 
+              />
             ))}
           </div>
         </div>
