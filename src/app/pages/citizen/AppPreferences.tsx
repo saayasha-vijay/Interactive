@@ -2,7 +2,6 @@ import { Header } from "../../components/Header";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { 
-  Settings, 
   Languages, 
   Moon, 
   MapPin, 
@@ -13,14 +12,15 @@ import {
   ChevronRight,
   Sun
 } from "lucide-react";
-import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 import { useNavigate } from "react-router";
 
 export default function AppPreferences() {
   const { logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(true);
+  const isDark = theme === 'dark';
 
   const handleLogout = () => {
     logout();
@@ -48,22 +48,50 @@ export default function AppPreferences() {
               <ChevronRight className="h-4 w-4 opacity-20" />
             </div>
             
+            {/* Theme Toggle */}
             <div 
-              onClick={() => setDarkMode(!darkMode)}
-              className="flex items-center justify-between p-3 transition-all cursor-pointer group"
+              onClick={() => setTheme(isDark ? 'light' : 'dark')}
+              className="flex items-center justify-between p-3 transition-all cursor-pointer group select-none"
             >
               <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
-                  {darkMode ? <Moon className="h-5 w-5 opacity-60" /> : <Sun className="h-5 w-5 text-orange-500" />}
+                <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center transition-colors">
+                  {isDark
+                    ? <Moon className="h-5 w-5 text-blue-400" />
+                    : <Sun className="h-5 w-5 text-orange-500" />
+                  }
                 </div>
                 <div>
                   <p className="text-sm font-bold tracking-tight">Appearance</p>
-                  <p className="text-[10px] opacity-50 font-medium">{darkMode ? "Dark Mode" : "Light Mode"}</p>
+                  <p className="text-[10px] opacity-50 font-medium">{isDark ? "Dark Mode" : "Light Mode"}</p>
                 </div>
               </div>
-              <div className={`h-5 w-10 rounded-full p-1 transition-colors ${darkMode ? 'bg-blue-600' : 'bg-muted'}`}>
-                <div className={`h-3 w-3 rounded-full bg-white transition-all ${darkMode ? 'translate-x-5' : 'translate-x-0'}`} />
+              {/* Toggle pill */}
+              <div className={`relative h-6 w-11 rounded-full transition-colors duration-300 ${isDark ? 'bg-blue-600' : 'bg-muted border border-border'}`}>
+                <div className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-all duration-300 ${isDark ? 'left-6' : 'left-1'}`} />
               </div>
+            </div>
+          </Card>
+        </section>
+
+        {/* Dark / Light quick-select buttons */}
+        <section className="space-y-4">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-1">Theme</h2>
+          <Card className="p-4 rounded-[2rem] border-border bg-card/40">
+            <div className="flex gap-3">
+              <button
+                onClick={() => setTheme('dark')}
+                className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl border-2 transition-all ${theme === 'dark' ? 'border-blue-600 bg-blue-600/10' : 'border-border opacity-50 hover:opacity-100'}`}
+              >
+                <Moon className={`h-5 w-5 ${theme === 'dark' ? 'text-blue-400' : ''}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Dark</span>
+              </button>
+              <button
+                onClick={() => setTheme('light')}
+                className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl border-2 transition-all ${theme === 'light' ? 'border-orange-500 bg-orange-500/10' : 'border-border opacity-50 hover:opacity-100'}`}
+              >
+                <Sun className={`h-5 w-5 ${theme === 'light' ? 'text-orange-500' : ''}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Light</span>
+              </button>
             </div>
           </Card>
         </section>
