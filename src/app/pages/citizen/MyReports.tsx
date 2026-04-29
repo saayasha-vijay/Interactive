@@ -33,7 +33,7 @@ export default function MyReports() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title="My Reports" showBack />
+      <Header title="My Reports" showBack onBack={() => navigate('/citizen/dashboard')} />
       
       <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 space-y-6">
         <div className="flex p-1 bg-muted rounded-2xl">
@@ -77,7 +77,7 @@ export default function MyReports() {
 
               {report.isOngoing && (
                 <Button 
-                  onClick={() => navigate('/citizen/tracking')}
+                  onClick={() => navigate('/citizen/live-tracking')}
                   className="w-full h-12 rounded-xl bg-red-600 hover:bg-red-700 font-bold gap-2"
                 >
                   <Activity className="h-4 w-4" />

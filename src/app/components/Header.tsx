@@ -32,7 +32,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from './ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from './ui/sheet';
 import { useAuth, UserRole } from '../context/AuthContext';
 
 interface HeaderProps {
@@ -155,9 +155,9 @@ function SidebarTrigger() {
     citizen: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/citizen/dashboard" },
       { icon: History, label: "My Reports", path: "/citizen/reports" },
-      { icon: Navigation, label: "Live Tracking", path: "/citizen/tracking" },
-      { icon: Lock, label: "Safety Settings", path: "/citizen/safety" },
-      { icon: HelpCircle, label: "Emergency Contacts", path: "/citizen/contacts" },
+      { icon: Navigation, label: "Live Tracking", path: "/citizen/live-tracking" },
+      { icon: Lock, label: "Safety Settings", path: "/citizen/safety-settings" },
+      { icon: HelpCircle, label: "Emergency Contacts", path: "/citizen/emergency-contacts" },
       { icon: Settings, label: "App Preferences", path: "/citizen/preferences" },
     ],
     operator: [
@@ -214,14 +214,14 @@ function SidebarTrigger() {
           <div className="space-y-1">
             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 ml-4 mb-2">Main Menu</h4>
             {currentMenu.map((item, idx) => (
-              <SheetTrigger asChild key={idx}>
+              <SheetClose asChild key={idx}>
                 <SidebarItem 
                   icon={item.icon} 
                   label={item.label} 
                   active={location.pathname === item.path}
                   onClick={() => item.path && navigate(item.path)} 
                 />
-              </SheetTrigger>
+              </SheetClose>
             ))}
           </div>
         </div>

@@ -1,8 +1,10 @@
 import { Header } from "../../components/Header";
 import { Card } from "../../components/ui/card";
 import { MapPin, Navigation, Clock, ShieldCheck, CheckCircle2, Radio } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function LiveTracking() {
+  const navigate = useNavigate();
   const steps = [
     { label: "Reported", status: "completed", time: "10:30 AM" },
     { label: "Assigned", status: "completed", time: "10:32 AM" },
@@ -12,7 +14,7 @@ export default function LiveTracking() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title="Live Tracking" showBack />
+      <Header title="Live Tracking" showBack onBack={() => navigate('/citizen/dashboard')} />
       
       <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 space-y-6">
         {/* Map Placeholder */}

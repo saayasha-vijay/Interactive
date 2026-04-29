@@ -28,9 +28,9 @@ export const router = createBrowserRouter([
     children: [
       { path: "dashboard", Component: CitizenDashboard },
       { path: "reports", Component: MyReports },
-      { path: "tracking", Component: LiveTracking },
-      { path: "safety", Component: SafetySettings },
-      { path: "contacts", Component: EmergencyContacts },
+      { path: "live-tracking", Component: LiveTracking },
+      { path: "safety-settings", Component: SafetySettings },
+      { path: "emergency-contacts", Component: EmergencyContacts },
       { path: "preferences", Component: AppPreferences },
     ],
   },

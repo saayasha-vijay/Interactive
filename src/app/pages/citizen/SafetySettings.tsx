@@ -3,13 +3,15 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Lock, Smartphone, Share2, VolumeX, Users, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function SafetySettings() {
+  const navigate = useNavigate();
   const [countdown, setCountdown] = useState("5 sec");
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title="Safety Settings" showBack />
+      <Header title="Safety Settings" showBack onBack={() => navigate('/citizen/dashboard')} />
       
       <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 space-y-6">
         <section className="space-y-4">

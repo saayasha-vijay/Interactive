@@ -2,8 +2,10 @@ import { Header } from "../../components/Header";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { UserPlus, Phone, User, Trash2, Edit2, ShieldAlert } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function EmergencyContacts() {
+  const navigate = useNavigate();
   const contacts = [
     { name: "Rahul Sharma", phone: "+91 98765 43210", relation: "Brother" },
     { name: "Anita Vijay", phone: "+91 87654 32109", relation: "Mother" }
@@ -11,7 +13,7 @@ export default function EmergencyContacts() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title="Emergency Contacts" showBack />
+      <Header title="Emergency Contacts" showBack onBack={() => navigate('/citizen/dashboard')} />
       
       <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 space-y-6">
         <div className="flex items-center justify-between mb-2">

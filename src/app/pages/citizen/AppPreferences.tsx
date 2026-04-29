@@ -29,7 +29,7 @@ export default function AppPreferences() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header title="App Preferences" showBack />
+      <Header title="App Preferences" showBack onBack={() => navigate('/citizen/dashboard')} />
       
       <main className="flex-1 max-w-xl mx-auto w-full px-6 py-8 space-y-8">
         <section className="space-y-4">
