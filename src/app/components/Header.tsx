@@ -151,36 +151,36 @@ function SidebarTrigger() {
     navigate('/', { replace: true });
   };
 
-  const menuItems: Record<string, { icon: any, label: string, active?: boolean }[]> = {
+  const menuItems: Record<string, { icon: any, label: string, active?: boolean, path?: string }[]> = {
     citizen: [
-      { icon: LayoutDashboard, label: "Dashboard", active: true },
-      { icon: History, label: "My Reports" },
-      { icon: Navigation, label: "Live Tracking" },
-      { icon: Lock, label: "Safety Settings" },
-      { icon: HelpCircle, label: "Emergency Contacts" },
-      { icon: Settings, label: "App Preferences" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/citizen/dashboard" },
+      { icon: History, label: "My Reports", path: "/citizen/reports" },
+      { icon: Navigation, label: "Live Tracking", path: "/citizen/tracking" },
+      { icon: Lock, label: "Safety Settings", path: "/citizen/safety" },
+      { icon: HelpCircle, label: "Emergency Contacts", path: "/citizen/contacts" },
+      { icon: Settings, label: "App Preferences", path: "/citizen/preferences" },
     ],
     operator: [
-      { icon: LayoutDashboard, label: "Dashboard", active: true },
-      { icon: Activity, label: "Live Incidents" },
-      { icon: Radio, label: "Unit Management" },
-      { icon: FileText, label: "Reports Queue" },
-      { icon: ShieldAlert, label: "System Status" },
-      { icon: User, label: "Profile" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/operator/dashboard" },
+      { icon: Activity, label: "Live Incidents", path: "/operator/dashboard" },
+      { icon: Radio, label: "Unit Management", path: "/operator/dashboard" },
+      { icon: FileText, label: "Reports Queue", path: "/operator/dashboard" },
+      { icon: ShieldAlert, label: "System Status", path: "/operator/dashboard" },
+      { icon: User, label: "Profile", path: "/operator/dashboard" },
     ],
     dispatch: [
-      { icon: LayoutDashboard, label: "Dashboard", active: true },
-      { icon: FileText, label: "Assigned Tasks" },
-      { icon: MapIcon, label: "Navigation / Map" },
-      { icon: Activity, label: "Status Updates" },
-      { icon: User, label: "Profile" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/dispatch/dashboard" },
+      { icon: FileText, label: "Assigned Tasks", path: "/dispatch/dashboard" },
+      { icon: MapIcon, label: "Navigation / Map", path: "/dispatch/dashboard" },
+      { icon: Activity, label: "Status Updates", path: "/dispatch/dashboard" },
+      { icon: User, label: "Profile", path: "/dispatch/dashboard" },
     ],
     supervisor: [
-      { icon: LayoutDashboard, label: "Dashboard", active: true },
-      { icon: BarChart3, label: "Analytics" },
-      { icon: FileText, label: "Reports Overview" },
-      { icon: TrendingUp, label: "System Performance" },
-      { icon: User, label: "Profile" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/supervisor/dashboard" },
+      { icon: BarChart3, label: "Analytics", path: "/supervisor/dashboard" },
+      { icon: FileText, label: "Reports Overview", path: "/supervisor/dashboard" },
+      { icon: TrendingUp, label: "System Performance", path: "/supervisor/dashboard" },
+      { icon: User, label: "Profile", path: "/supervisor/dashboard" },
     ],
   };
 
@@ -214,7 +214,14 @@ function SidebarTrigger() {
           <div className="space-y-1">
             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 ml-4 mb-2">Main Menu</h4>
             {currentMenu.map((item, idx) => (
-              <SidebarItem key={idx} icon={item.icon} label={item.label} active={item.active} />
+              <SheetTrigger asChild key={idx}>
+                <SidebarItem 
+                  icon={item.icon} 
+                  label={item.label} 
+                  active={location.pathname === item.path}
+                  onClick={() => item.path && navigate(item.path)} 
+                />
+              </SheetTrigger>
             ))}
           </div>
         </div>
@@ -236,10 +243,11 @@ function SidebarTrigger() {
   );
 }
 
-function SidebarItem({ icon: Icon, label, active = false, badge }: { icon: any, label: string, active?: boolean, badge?: string }) {
+function SidebarItem({ icon: Icon, label, active = false, badge, onClick }: { icon: any, label: string, active?: boolean, badge?: string, onClick?: () => void }) {
   return (
     <Button 
       variant="ghost" 
+      onClick={onClick}
       className={`w-full justify-start h-12 rounded-2xl gap-3 px-4 transition-all ${active ? 'bg-red-600/10 text-red-600 hover:bg-red-600/15' : 'hover:bg-muted opacity-70 hover:opacity-100'}`}
     >
       <Icon className={`h-5 w-5 ${active ? 'text-red-600' : ''}`} />

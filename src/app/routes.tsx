@@ -6,6 +6,12 @@ import SupervisorDashboard from "./pages/supervisor/dashboard";
 import DispatchDashboard from "./pages/dispatch/dashboard";
 import NotFound from "./pages/not-found";
 
+import MyReports from "./pages/citizen/MyReports";
+import LiveTracking from "./pages/citizen/LiveTracking";
+import SafetySettings from "./pages/citizen/SafetySettings";
+import EmergencyContacts from "./pages/citizen/EmergencyContacts";
+import AppPreferences from "./pages/citizen/AppPreferences";
+
 // Layout component for nested routes
 function Layout() {
   return <Outlet />;
@@ -21,6 +27,11 @@ export const router = createBrowserRouter([
     Component: Layout,
     children: [
       { path: "dashboard", Component: CitizenDashboard },
+      { path: "reports", Component: MyReports },
+      { path: "tracking", Component: LiveTracking },
+      { path: "safety", Component: SafetySettings },
+      { path: "contacts", Component: EmergencyContacts },
+      { path: "preferences", Component: AppPreferences },
     ],
   },
   {
