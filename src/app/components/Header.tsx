@@ -63,8 +63,7 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
   };
 
   return (
-    <>
-      <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md px-4 sm:px-6 h-16 flex items-center justify-between">
       <div className="flex items-center gap-4">
         {showBack ? (
           <Button 
@@ -140,10 +139,6 @@ export function Header({ title, showBack = false, onBack }: HeaderProps) {
         </DropdownMenu>
       </div>
     </header>
-    <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white text-center py-1 text-[8px] font-black z-[9999] pointer-events-none">
-      ACTIVE HEADER COMPONENT - V2
-    </div>
-    </>
   );
 }
 
@@ -219,7 +214,6 @@ function SidebarTrigger() {
             <div className="text-left">
               <SheetTitle className="text-xl font-black tracking-tight">IND-EMERGENCY</SheetTitle>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Unified Response v4.0</p>
-              <p className="text-[8px] text-yellow-500 font-black mt-1">DEBUG: ACTIVE HEADER</p>
             </div>
           </div>
         </SheetHeader>

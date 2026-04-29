@@ -142,9 +142,6 @@ export default function CitizenDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <div className="bg-yellow-500 text-black text-center font-black py-2 text-sm">
-        TEST: THIS IS THE ACTIVE CITIZEN DASHBOARD
-      </div>
       <Header 
         title={view === 'detail' ? `${selectedCategory?.title} Services` : "Citizen Dashboard"} 
         showBack={view === 'detail'} 
